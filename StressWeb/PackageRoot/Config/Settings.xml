@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+    <Section Name="GatewaySettings">
+        <Parameter Name="ApplicationInsightsConnectionString" Value="-must-override-this-value-" MustOverride="true" />
+        <Parameter Name="InstrumentationKey" Value="-must-override-this-value-" MustOverride="true" />
+        <Parameter Name="LiveTelemetryApiKey" Value="-must-override-this-value-" MustOverride="true" />
+        <Parameter Name="WebPlacementConstraint" Value="-must-override-this-value-" MustOverride="true" />
+        <Parameter Name="AgentPlacementConstraint" Value="-must-override-this-value-" MustOverride="true" />
+        <Parameter Name="AgentCoresPerInstance" Value="-must-override-this-value-" MustOverride="true" />
+        <Parameter Name="AgentCoresPackageLimit" Value="-must-override-this-value-" MustOverride="true" />
+        <Parameter Name="AgentMemoryPerInstance" Value="-must-override-this-value-" MustOverride="true" />
+        <Parameter Name="AgentMemoryInMBPackageLimit" Value="-must-override-this-value-" MustOverride="true" />
+    </Section>
+</Settings>

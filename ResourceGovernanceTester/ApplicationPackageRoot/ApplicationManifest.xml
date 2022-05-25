@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="ResourceGovernanceTesterType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <Parameters>
+    <Parameter Name="StressAgent_InstanceCount" DefaultValue="1" />
+    <Parameter Name="StressAgent_PlacementConstraint" DefaultValue="" />
+    <Parameter Name="StressWeb_MinReplicaSetSize" DefaultValue="2" />
+    <Parameter Name="StressWeb_TargetReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="StressWeb_PartitionCount" DefaultValue="1" />
+    <Parameter Name="StressWeb_ASPNETCORE_ENVIRONMENT" DefaultValue="" />
+    <Parameter Name="StressWeb_PlacementConstraint" DefaultValue="" />
+    <Parameter Name="ApplicationInsightsConnectionString" DefaultValue="" />
+    <Parameter Name="InstrumentationKey" DefaultValue="" />
+    <Parameter Name="LiveTelemetryApiKey" DefaultValue="" />
+    <Parameter Name="AgentCoresPerInstance" DefaultValue=".1" />
+    <Parameter Name="AgentCoresPackageLimit" DefaultValue="2" />
+    <Parameter Name="AgentMemoryPerInstance" DefaultValue="1024" />
+    <Parameter Name="AgentMemoryInMBPackageLimit" DefaultValue="2048" />
+  </Parameters>
+  <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
+       should match the Name and Version attributes of the ServiceManifest element defined in the 
+       ServiceManifest.xml file. -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="StressAgentPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides>
+      <ConfigOverride Name="Config">
+        <Settings>
+          <Section Name="AgentSettings">
+            <Parameter Name="ApplicationInsightsConnectionString" Value="[ApplicationInsightsConnectionString]" />
+            <Parameter Name="InstrumentationKey" Value="[InstrumentationKey]" />
+            <Parameter Name="LiveTelemetryApiKey" Value="[LiveTelemetryApiKey]" />
+          </Section>
+        </Settings>
+      </ConfigOverride>
+    </ConfigOverrides>
+    <Policies>
+      <!--<ServicePackageResourceGovernancePolicy CpuCores="[AgentCoresPerInstance]" MemoryInMBLimit="[AgentMemoryInMBPackageLimit]" />-->
+    </Policies>
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="StressWebPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides>
+      <ConfigOverride Name="Config">
+        <Settings>
+          <Section Name="GatewaySettings">
+            <Parameter Name="ApplicationInsightsConnectionString" Value="[ApplicationInsightsConnectionString]" />
+            <Parameter Name="InstrumentationKey" Value="[InstrumentationKey]" />
+            <Parameter Name="LiveTelemetryApiKey" Value="[LiveTelemetryApiKey]" />
+            <Parameter Name="WebPlacementConstraint" Value="[StressWeb_PlacementConstraint]" />
+            <Parameter Name="AgentPlacementConstraint" Value="[StressAgent_PlacementConstraint]" />
+            <Parameter Name="AgentCoresPerInstance" Value="[AgentCoresPerInstance]" />
+            <Parameter Name="AgentCoresPackageLimit" Value="[AgentCoresPackageLimit]" />
+            <Parameter Name="AgentMemoryPerInstance" Value="[AgentMemoryPerInstance]" />
+            <Parameter Name="AgentMemoryInMBPackageLimit" Value="[AgentMemoryInMBPackageLimit]" />
+          </Section>
+        </Settings>
+      </ConfigOverride>
+    </ConfigOverrides>
+    <EnvironmentOverrides CodePackageRef="code">
+      <EnvironmentVariable Name="ASPNETCORE_ENVIRONMENT" Value="[StressWeb_ASPNETCORE_ENVIRONMENT]" />
+    </EnvironmentOverrides>
+  </ServiceManifestImport>
+  <DefaultServices>
+    <Service Name="StressWeb" ServicePackageActivationMode="ExclusiveProcess">
+      <StatefulService ServiceTypeName="StressWebType" TargetReplicaSetSize="[StressWeb_TargetReplicaSetSize]" MinReplicaSetSize="[StressWeb_MinReplicaSetSize]">
+        <SingletonPartition />
+        <PlacementConstraints>[StressWeb_PlacementConstraint]</PlacementConstraints>
+      </StatefulService>
+    </Service>
+  </DefaultServices>
+</ApplicationManifest>
